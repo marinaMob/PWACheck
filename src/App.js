@@ -1,7 +1,31 @@
+import React, { useEffect } from 'react';
 import logo from './logo.svg';
 import './App.css';
 
 function App() {
+  const handleDownloadClick = () => {
+    const deferredPrompt = window.deferredPrompt;
+
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+
+      deferredPrompt.userChoice.then((choiceResult) => {
+        if (choiceResult.outcome === 'accepted') {
+          console.log('User accepted the install prompt');
+        } else {
+          console.log('User dismissed the install prompt');
+        }
+      });
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener('beforeinstallprompt', (event) => {
+      event.preventDefault();
+      window.deferredPrompt = event;
+    });
+  }, []);
+
   return (
     <div className="App">
       <header className="App-header">
@@ -17,9 +41,11 @@ function App() {
         >
           Learn React
         </a>
+        <button onClick={handleDownloadClick}>Download PWA</button>
       </header>
     </div>
   );
 }
 
 export default App;
+

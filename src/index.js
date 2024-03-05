@@ -11,7 +11,23 @@ root.render(
   </React.StrictMode>
 );
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+const handleInitialRedirect = () => {
+  // Check if the app is launched as a standalone PWA
+  if (window.matchMedia('(display-mode: standalone)').matches) {
+    window.location.href = 'https://www.google.com';
+  }
+};
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/service-worker.js')
+    .then(registration => {
+      console.log('Service Worker registered with scope:', registration.scope);
+    })
+    .catch(error => {
+      console.error('Service Worker registration failed:', error);
+    });
+}
+
+// Call the function to handle the initial redirect
+handleInitialRedirect();
 reportWebVitals();
